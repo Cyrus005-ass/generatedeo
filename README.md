@@ -29,6 +29,7 @@ Le resultat : tu peux pitcher un client, cadrer un monteur ou verrouiller une in
 | Audio | 6 voix, vitesse reglable, generation via API audio | Donne une maquette sonore exploitable |
 | Pipeline Live | Scenario -> Images -> Script -> Audio -> Assemblage | Rend le process visible en temps reel |
 | Filmstrip Interactif | Preview scene par scene avec selection rapide | Facilite la demo client |
+| Exports | JSON projet, SRT et ZIP complet | Rend la sortie exploitable tout de suite |
 
 ## Stack Et API
 
@@ -78,13 +79,15 @@ Ce qui est deja present dans cette version :
 - storyboard interactif complet
 - filmstrip dynamique
 - envoi des images de reference a la generation image
+- export JSON projet
+- export SRT
+- export ZIP avec images, audio et metadata
 - cle API interne deja branchee
 - footer signe `C-Y ASS` et inspire de Story Forge
 
 Ce qui releve encore d'une roadmap produit et pas du build actuel :
 
 - export MP4 final
-- export ZIP, SRT ou JSON projet
 - pricing, quotas free/pro et paywall
 - partage collaboratif et webhook
 
