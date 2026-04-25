@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang='fr'>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <title>VIDEO FORGE</title>
+  <link rel='preconnect' href='https://fonts.googleapis.com'>
+  <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
+  <link href='https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&display=swap' rel='stylesheet'>
+  <link rel='stylesheet' href='style.css'>
+</head>
+<body>
+  <div class='wrap'>
+    <header class='top'>
+      <div class='brand'>
+        <div class='icon'>VIDEO</div>
+        <div>
+          <div class='logo'>VIDEO FORGE</div>
+          <div class='sub'>AI Video Creator · Image + Audio + Script</div>
+        </div>
+      </div>
+      <div class='api'>
+        <div class='pill'>LIVE API</div>
+        <div class='key'>
+          <span>API</span>
+          <input id='apiKey' type='password' placeholder='sk-...'>
+        </div>
+        <div class='small'>Cle stockee localement. Aucune cle codee en dur.</div>
+      </div>
+    </header>
+    <div class='label'>Configuration du projet video</div>
+    <div class='tabs' id='mainTabs'>
+      <button class='tab active' type='button' onclick='switchTab(0)'>Scenario</button>
+      <button class='tab' type='button' onclick='switchTab(1)'>Images Ref</button>
+      <button class='tab' type='button' onclick='switchTab(2)'>Narration</button>
+      <button class='tab' type='button' onclick='switchTab(3)'>Rendu</button>
+    </div>
+    <section id='tab0' class='pane'>
+      <div class='card'>
+        <div class='field'>
+          <label>Concept / idee de la video</label>
+          <textarea id='concept' rows='4' placeholder='Ex: teaser documentaire sur Cotonou au coucher du soleil, trois plans, narration inspirante, images coherentes.'></textarea>
+        </div>
+        <div class='grid2'>
+          <div class='field'><label>Duree cible</label><select id='vidDuration'><option value='15'>15 secondes</option><option value='30' selected>30 secondes</option><option value='60'>1 minute</option><option value='90'>1m30</option><option value='120'>2 minutes</option><option value='180'>3 minutes</option></select></div>
+          <div class='field'><label>Format</label><select id='vidFormat'><option value='16:9'>16:9</option><option value='9:16'>9:16</option><option value='1:1'>1:1</option><option value='4:5'>4:5</option></select></div>
+        </div>
+        <div class='field'>
+          <label>Plans</label>
+          <div class='shots' id='shotsList'></div>
+          <button class='btn-lite' type='button' onclick='addShot()'>+ Ajouter un plan</button>
+        </div>
+        <label class='toggle'>
+          <input id='autoShots' type='checkbox' onchange='renderShots()'>
+          <span class='sw'></span>
+          <b>Laisser l IA generer les plans automatiquement</b>
+        </label>
+      </div>
+    </section>
+    <section id='tab1' class='pane' style='display:none'>
+      <div class='card'>
+        <div class='field'>
+          <label>Images de reference</label>
+          <div class='upload' id='uploadZone'>
+            <input id='refImagesInput' type='file' accept='image/*' multiple onchange='handleImageUpload(event)'>
+            <div style='font-size:34px;margin-bottom:8px'>IMG</div>
+            <div>Glissez vos images ici ou cliquez pour importer</div>
+            <div class='hint'>Max 5 images</div>
+          </div>
+          <div class='thumbs' id='imgPreviews'></div>
+        </div>
+        <div class='field'>
+          <label>Style visuel global</label>
+          <select id='visualStyle'><option value='cinematic film look, warm golden hour, dramatic shadows, 35mm grain, color graded, ultra detailed'>Cinematographique 35mm</option><option value='documentary style, natural light, photorealistic, raw authentic'>Documentaire realiste</option><option value='dark neo-noir, dramatic contrast, moody lighting'>Noir dramatique</option><option value='commercial advertisement style, luxury, product focus, vivid colors'>Publicite studio</option><option value='West African aesthetic, warm sunlight, rich earth tones, cultural richness'>Afrique de l Ouest</option><option value='Afrofuturism aesthetic, futuristic African design, sci-fi dramatic'>Afrofuturisme</option><option value='Studio Ghibli inspired, painterly, whimsical, soft colors'>Ghibli poetique</option></select>
+        </div>
+        <div class='grid2'>
+          <div class='field'><label>Resolution image</label><select id='imgRes'><option value='1536x1024'>1536x1024</option><option value='1024x1536'>1024x1536</option><option value='1024x1024' selected>1024x1024</option></select></div>
+          <div class='field'><label>Qualite image</label><select id='imgQuality'><option value='medium' selected>Medium</option><option value='high'>High</option><option value='low'>Low</option></select></div>
+        </div>
+      </div>
+    </section>
+    <section id='tab2' class='pane' style='display:none'>
+      <div class='card'>
+        <div class='field'>
+          <label>Mode de narration</label>
+          <div class='tabs' id='narTabs'>
+            <button class='tab active' type='button' onclick='switchNarTab(0)'>Auto</button>
+            <button class='tab' type='button' onclick='switchNarTab(1)'>Manuel</button>
+            <button class='tab' type='button' onclick='switchNarTab(2)'>Aucune</button>
+          </div>
+        </div>
+        <div id='nar0'>
+          <div class='field'><label>Ton</label><select id='narTone'><option value='inspirational and powerful documentary voice'>Inspirant documentaire</option><option value='calm and poetic storytelling voice'>Calme et poetique</option><option value='dynamic commercial energy'>Dynamique pub</option><option value='professional and informative'>Professionnel</option><option value='mysterious and cinematic'>Mysterieux</option><option value='joyful and celebratory'>Festif</option></select></div>
+          <div class='field'><label>Langue</label><select id='narLang'><option value='French'>Francais</option><option value='English'>Anglais</option><option value='Portuguese'>Portugais</option><option value='Wolof (with French transliteration)'>Wolof</option><option value='Fon (with French transliteration)'>Fon</option><option value='Swahili'>Swahili</option></select></div>
+        </div>
+        <div id='nar1' style='display:none'><div class='field'><label>Script de narration</label><textarea id='manualScript' rows='6' placeholder='Un paragraphe global ou un paragraphe par scene separe par une ligne vide.'></textarea><div class='hint'>Plusieurs paragraphes seront repartis par scene.</div></div></div>
+        <div id='nar2' style='display:none' class='hint'>Video sans narration.</div>
+        <div class='field' id='voiceField'><label>Voix</label><div class='voice-list' id='voiceList'><div class='voice sel' data-voice='alloy'>Alloy<small>Neutre</small></div><div class='voice' data-voice='echo'>Echo<small>Profond</small></div><div class='voice' data-voice='fable'>Fable<small>Narratif</small></div><div class='voice' data-voice='onyx'>Onyx<small>Grave</small></div><div class='voice' data-voice='nova'>Nova<small>Energie</small></div><div class='voice' data-voice='shimmer'>Shimmer<small>Doux</small></div></div></div>
+        <div class='field'><label>Vitesse de parole</label><div class='range'><input id='speechSpeed' type='range' min='0.5' max='2' step='0.05' value='1'><em id='speedVal'>1x</em></div></div>
+      </div>
+    </section>
+    <section id='tab3' class='pane' style='display:none'>
+      <div class='card'>
+        <div class='grid2'>
+          <div class='field'><label>Transitions</label><select id='transitions'><option value='smooth fade'>Fondu</option><option value='sharp cut' selected>Coupe franche</option><option value='zoom transition'>Zoom</option><option value='slide wipe'>Slide</option><option value='flash cut'>Flash</option></select></div>
+          <div class='field'><label>Pacing</label><select id='pacing'><option value='slow and cinematic'>Lent</option><option value='moderate and smooth' selected>Modere</option><option value='fast and energetic'>Rapide</option><option value='very fast and punchy'>Tres rapide</option></select></div>
+        </div>
+        <div class='field'><label>Musique de fond</label><select id='bgMusic'><option value='none'>Aucune</option><option value='epic orchestral, cinematic score, dramatic build-up'>Epique</option><option value='African percussion and kora, warm rhythmic, traditional modern fusion' selected>Africain</option><option value='lo-fi chill, ambient electronic, soft beats'>Lo-fi</option><option value='upbeat corporate, motivational, energetic pop'>Corporate</option><option value='emotional piano, melancholic, cinematic'>Piano</option></select></div>
+        <div class='field'><label>Sous-titres</label><div class='tabs'><button class='tab active sub-btn' type='button' data-mode='none'>Aucun</button><button class='tab sub-btn' type='button' data-mode='bottom'>En bas</button><button class='tab sub-btn' type='button' data-mode='cinematic'>Cinematique</button></div></div>
+        <div class='field'><label>Instructions additionnelles</label><textarea id='extraInst' rows='3' placeholder='Ex: logo en bas a droite, palette verte et blanche, overlay par scene...'></textarea></div>
+        <div class='hint'>Cette version assemble un storyboard interactif complet. Un export MP4 reel demanderait une etape backend dediee.</div>
+      </div>
+    </section>
+    <button class='cta' id='genBtn' type='button' onclick='startVideoGeneration()'>GENERER LE PROJET IA</button>
+    <section class='status card' id='statusPanel'>
+      <div class='head'><div class='title'><span class='dot' id='statusDot'></span><span id='statusTitle'>Initialisation...</span></div><div class='timer' id='timerPill' style='display:none'><span>Temps :</span><span id='timerVal'>0s</span></div></div>
+      <div class='bar'><span id='progFill'></span></div>
+      <div class='steps'>
+        <div class='step' id='s1'><div class='step-ic'>1</div><div><div class='step-name'>Scenarisation</div><div class='step-detail' id='s1d'>Decoupage du projet...</div></div></div>
+        <div class='step' id='s2'><div class='step-ic'>2</div><div><div class='step-name'>References + images</div><div class='step-detail' id='s2d'>Analyse visuelle et visuels...</div></div></div>
+        <div class='step' id='s3'><div class='step-ic'>3</div><div><div class='step-name'>Script</div><div class='step-detail' id='s3d'>Preparation de la narration...</div></div></div>
+        <div class='step' id='s4'><div class='step-ic'>4</div><div><div class='step-name'>TTS Audio</div><div class='step-detail' id='s4d'>Synthese vocale...</div></div></div>
+        <div class='step' id='s5'><div class='step-ic'>5</div><div><div class='step-name'>Assemblage</div><div class='step-detail' id='s5d'>Mise en forme finale...</div></div></div>
+      </div>
+      <div class='log' id='logBox'></div>
+    </section>
+    <section class='results' id='resultPanel'>
+      <div class='label'>Resultats generes</div>
+      <div class='stage'><div class='empty' id='stageEmpty'><div><b>STORYBOARD PRET</b><p>Apercu interactif des plans generes.</p></div></div><div class='viewer' id='stageView'></div></div>
+      <div class='label' style='margin-top:18px'>Sequences generees</div>
+      <div class='filmstrip' id='filmstrip'></div>
+      <div id='scriptWrap' style='display:none'><div class='label' style='margin-top:18px'>Script de narration</div><div class='script'><h4>Voix-off</h4><div id='scriptScenes'></div></div></div>
+      <div id='audioWrap' style='display:none'><div class='label' style='margin-top:18px'>Pistes audio</div><div class='tracks' id='audioTracks'></div></div>
+      <div class='actions'><button class='action' type='button' onclick='resetApp()'>Nouveau projet</button><button class='action' type='button' onclick='downloadAllAudio()'>Telecharger audio(s)</button><button class='action' type='button' onclick='downloadAllImages()'>Telecharger images</button></div>
+    </section>
+    <footer>Made with <em>VIDEO FORGE</em> · Inspired by Story Forge · Signature <em>C-Y ASS</em></footer>
+  </div>
+  <script src='app.js'></script>
+</body>
+</html>
